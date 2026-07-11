@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Orbit — ISS Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  #globeViz {
+    width: 100%;
+    height: 320px;
+    margin: 4px 0 0;
+  }
+  .globe-wrap { position: relative; }
+  .globe-wrap .pill-badge { position: absolute; top: 16px; left: 24px; z-index: 5; }
+
+  .telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 16px 20px 4px;
+  }
+  .telem-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+  }
+  .telem-card .k { font-size: 11px; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; }
+  .telem-card .v { font-size: 20px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; margin-top: 4px; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 26px 24px 6px;
+  }
+  .section-head h2 { font-size: 18px; }
+  .section-head .sub { font-size: 12px; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
+
+  .astro-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 8px 24px 4px;
+  }
+  .astro-chip {
+    flex: 0 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .astro-chip .craft { color: var(--text-faint); font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+
+  .neo-list { padding: 6px 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .neo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .neo-card .name { font-weight: 600; font-size: 14px; }
+  .neo-card .sub { font-size: 12px; color: var(--text-dim); margin-top: 3px; }
+  .neo-card .hazard {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 3px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+  .hazard.safe { background: rgba(78,161,255,0.14); color: var(--blue); }
+  .hazard.watch { background: rgba(255,92,77,0.14); color: var(--live); }
+  .neo-card .dist { text-align: right; }
+  .neo-card .dist .num { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 13px; }
+  .neo-card .dist .unit { font-size: 10px; color: var(--text-faint); }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">Live Orbital Data</div>
+      <h1>ISS Tracker</h1>
+    </div>
+  </div>
+
+  <div class="globe-wrap card" style="margin: 0 20px; padding: 0; overflow: hidden;">
+    <div class="pill-badge"><span class="dot"></span>Live</div>
+    <div id="globeViz"></div>
+  </div>
+
+  <div class="telemetry-grid">
+    <div class="telem-card"><div class="k">Latitude</div><div class="v mono" id="t-lat">—</div></div>
+    <div class="telem-card"><div class="k">Longitude</div><div class="v mono" id="t-lon">—</div></div>
+    <div class="telem-card"><div class="k">Altitude</div><div class="v mono" id="t-alt">—</div></div>
+    <div class="telem-card"><div class="k">Velocity</div><div class="v mono" id="t-vel">—</div></div>
+  </div>
+
+  <div class="section-head">
+    <h2>Crew in orbit</h2>
+    <div class="sub" id="astro-count"></div>
+  </div>
+  <div class="astro-row" id="astro-row">
+    <div class="state-msg">Loading crew…</div>
+  </div>
+
+  <div class="section-head" id="neo">
+    <h2>Near-Earth objects</h2>
+    <div class="sub">today</div>
+  </div>
+  <div class="neo-list" id="neo-list">
+    <div class="state-msg"><div class="spinner"></div>Scanning nearby space…</div>
+  </div>
+
+  <nav class="island-nav">
+    <a href="index.html"><span class="glyph">🏠</span>Home</a>
+    <a href="mars.html"><span class="glyph">🔴</span>Mars</a>
+    <a href="apod.html"><span class="glyph">✨</span>Daily</a>
+    <a href="iss.html" class="active"><span class="glyph">🛰️</span>ISS</a>
+  </nav>
+
+  <script src="js/config.js"></script>
+  <script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl@2.32.2/dist/globe.gl.min.js"></script>
+  <script src="js/iss.js"></script>
+</body>
+</html>

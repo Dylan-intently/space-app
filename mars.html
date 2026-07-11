@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Orbit — Mars</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body { padding-bottom: 130px; }
+  .stack-wrap {
+    position: relative;
+    height: calc(100vh - 230px);
+    min-height: 420px;
+    margin: 4px 20px 0;
+    touch-action: none;
+  }
+  .card-photo {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-float);
+    will-change: transform;
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1), opacity 0.35s;
+  }
+  .card-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+  }
+  .card-photo .meta {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 18px 18px 16px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.75), transparent);
+  }
+  .card-photo .meta .rover { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; }
+  .card-photo .meta .cam { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+  .stamp {
+    position: absolute; top: 22px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 20px;
+    padding: 6px 14px;
+    border: 3px solid;
+    border-radius: 8px;
+    opacity: 0;
+    transform: rotate(-12deg);
+    letter-spacing: 0.05em;
+  }
+  .stamp.next { right: 20px; color: var(--blue); border-color: var(--blue); }
+  .stamp.back { left: 20px; color: var(--violet); border-color: var(--violet); transform: rotate(12deg); }
+
+  .controls-row {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 16px;
+  }
+  .ctrl-btn {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .ctrl-btn:active { transform: scale(0.9); }
+  .progress-line { text-align: center; font-size: 12px; color: var(--text-faint); margin-top: 10px; font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">Curiosity · Perseverance</div>
+      <h1>Mars Feed</h1>
+    </div>
+  </div>
+
+  <div class="stack-wrap" id="stack">
+    <div class="state-msg" id="loading-msg" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <div class="spinner"></div>
+      Pulling latest transmissions…
+    </div>
+  </div>
+
+  <div class="controls-row">
+    <button class="ctrl-btn" id="btn-back">↩</button>
+    <button class="ctrl-btn" id="btn-next">↪</button>
+  </div>
+  <div class="progress-line" id="progress-line"></div>
+
+  <nav class="island-nav">
+    <a href="index.html"><span class="glyph">🏠</span>Home</a>
+    <a href="mars.html" class="active"><span class="glyph">🔴</span>Mars</a>
+    <a href="apod.html"><span class="glyph">✨</span>Daily</a>
+    <a href="iss.html"><span class="glyph">🛰️</span>ISS</a>
+  </nav>
+
+  <script src="js/config.js"></script>
+  <script src="js/mars.js"></script>
+</body>
+</html>

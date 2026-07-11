@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Orbit — Picture of the Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .tabs { display: flex; gap: 8px; margin: 0 24px 12px; }
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .tab-btn.active { background: var(--gradient); color: #0a0a10; border-color: transparent; }
+
+  .apod-media {
+    margin: 0 20px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    position: relative;
+  }
+  .apod-media img, .apod-media video { width: 100%; display: block; }
+  .save-btn {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: rgba(10,10,16,0.55);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .save-btn.saved { color: var(--live); }
+
+  .apod-body { padding: 18px 24px 4px; }
+  .apod-body h2 { font-size: 21px; margin-bottom: 6px; }
+  .apod-body .date { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.08em; }
+  .apod-body p { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-top: 10px; }
+
+  .action-row { display: flex; gap: 10px; padding: 16px 24px 6px; }
+  .action-row .btn { flex: 1; }
+
+  .saved-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 4px 20px;
+  }
+  .saved-grid img {
+    width: 100%; aspect-ratio: 1; object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+  }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">NASA APOD</div>
+      <h1>Picture of the Day</h1>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab-btn active" id="tab-today">Today</div>
+    <div class="tab-btn" id="tab-saved">Saved</div>
+  </div>
+
+  <div id="view-today">
+    <div class="apod-media" id="media-wrap">
+      <div class="state-msg" style="padding:80px 20px;"><div class="spinner"></div>Fetching today's image…</div>
+    </div>
+    <div class="apod-body">
+      <div class="date" id="apod-date"></div>
+      <h2 id="apod-title"></h2>
+      <p id="apod-explanation"></p>
+    </div>
+    <div class="action-row">
+      <button class="btn" id="btn-download">⬇ Download</button>
+      <button class="btn" id="btn-share">↗ Share</button>
+    </div>
+  </div>
+
+  <div id="view-saved" class="hidden">
+    <div class="saved-grid" id="saved-grid"></div>
+    <div class="state-msg hidden" id="saved-empty">Nothing saved yet — tap the heart on a picture to keep it here.</div>
+  </div>
+
+  <nav class="island-nav">
+    <a href="index.html"><span class="glyph">🏠</span>Home</a>
+    <a href="mars.html"><span class="glyph">🔴</span>Mars</a>
+    <a href="apod.html" class="active"><span class="glyph">✨</span>Daily</a>
+    <a href="iss.html"><span class="glyph">🛰️</span>ISS</a>
+  </nav>
+
+  <script src="js/config.js"></script>
+  <script src="js/apod.js"></script>
+</body>
+</html>

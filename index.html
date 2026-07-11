@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Orbit — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .hero {
+    margin: 8px 24px 20px;
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    background: var(--gradient-soft);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero .label { font-size: 12px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; }
+  .hero .big-stat { font-size: 42px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; margin-top: 6px; }
+  .hero .sub { color: var(--text-dim); font-size: 13px; margin-top: 4px; }
+  .hero canvas { position: absolute; right: -30px; top: -30px; opacity: 0.5; pointer-events: none; }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div>
+      <div class="eyebrow" id="date-line">—</div>
+      <h1>Orbit</h1>
+    </div>
+    <div class="pill-badge"><span class="dot"></span>Live</div>
+  </div>
+
+  <div class="hero">
+    <div class="label">International Space Station · altitude</div>
+    <div class="big-stat mono" id="hero-alt">— km</div>
+    <div class="sub" id="hero-sub">Locating station…</div>
+  </div>
+
+  <div class="hub-grid">
+    <a class="hub-tile accent-1" href="iss.html">
+      <div class="icon">🛰️</div>
+      <div>
+        <h3>ISS Tracker</h3>
+        <p>Live position, globe view, ground track & upcoming passes</p>
+      </div>
+    </a>
+    <a class="hub-tile accent-2" href="mars.html">
+      <div class="icon">🔴</div>
+      <div>
+        <h3>Mars Feed</h3>
+        <p>Swipe through rover photos from Curiosity & Perseverance</p>
+      </div>
+    </a>
+    <a class="hub-tile wide accent-1" href="apod.html">
+      <div class="icon">✨</div>
+      <div>
+        <h3>Picture of the Day</h3>
+        <p>NASA's daily image or video, with save & share</p>
+      </div>
+    </a>
+    <a class="hub-tile accent-2" href="iss.html#neo">
+      <div class="icon">☄️</div>
+      <div>
+        <h3>Near-Earth Objects</h3>
+        <p>Asteroids passing by today, sorted by proximity</p>
+      </div>
+    </a>
+    <a class="hub-tile accent-1" href="apod.html#saved">
+      <div class="icon">💾</div>
+      <div>
+        <h3>Saved</h3>
+        <p>Your bookmarked space images</p>
+      </div>
+    </a>
+  </div>
+
+  <nav class="island-nav">
+    <a href="index.html" class="active"><span class="glyph">🏠</span>Home</a>
+    <a href="mars.html"><span class="glyph">🔴</span>Mars</a>
+    <a href="apod.html"><span class="glyph">✨</span>Daily</a>
+    <a href="iss.html"><span class="glyph">🛰️</span>ISS</a>
+  </nav>
+
+  <script src="js/config.js"></script>
+  <script>
+    document.getElementById('date-line').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+    async function loadHero() {
+      try {
+        const res = await fetch('https://api.wheretheiss.at/v1/satellites/25544');
+        const data = await res.json();
+        document.getElementById('hero-alt').textContent = data.altitude.toFixed(1) + ' km';
+        document.getElementById('hero-sub').textContent =
+          `${data.latitude.toFixed(2)}°, ${data.longitude.toFixed(2)}° · ${Math.round(data.velocity)} km/h`;
+      } catch (e) {
+        document.getElementById('hero-sub').textContent = 'Signal unavailable — check connection';
+      }
+    }
+    loadHero();
+    setInterval(loadHero, 8000);
+  </script>
+</body>
+</html>
