@@ -6,7 +6,7 @@
 <title>Orbit — Mars</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
 <style>
   body { padding-bottom: 130px; }
   .stack-wrap {
@@ -55,7 +55,7 @@
   }
   .stamp.next { right: 20px; color: var(--blue); border-color: var(--blue); }
   .stamp.back { left: 20px; color: var(--violet); border-color: var(--violet); transform: rotate(12deg); }
-
+ 
   .controls-row {
     display: flex;
     justify-content: center;
@@ -75,35 +75,35 @@
 </style>
 </head>
 <body>
-
+ 
   <div class="topbar">
     <div>
       <div class="eyebrow">Curiosity · Perseverance</div>
       <h1>Mars Feed</h1>
     </div>
   </div>
-
+ 
   <div class="stack-wrap" id="stack">
     <div class="state-msg" id="loading-msg" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
       <div class="spinner"></div>
-      Pulling latest transmissions…
+      Pulling photos from the archive…
     </div>
   </div>
-
+ 
   <div class="controls-row">
     <button class="ctrl-btn" id="btn-back">↩</button>
     <button class="ctrl-btn" id="btn-next">↪</button>
   </div>
   <div class="progress-line" id="progress-line"></div>
-
+ 
   <nav class="island-nav">
     <a href="index.html"><span class="glyph">🏠</span>Home</a>
     <a href="mars.html" class="active"><span class="glyph">🔴</span>Mars</a>
     <a href="apod.html"><span class="glyph">✨</span>Daily</a>
     <a href="iss.html"><span class="glyph">🛰️</span>ISS</a>
   </nav>
-
-  <script src="config.js"></script>
-  <script src="mars.js"></script>
+ 
+  <script src="js/config.js"></script>
+  <script src="js/mars.js"></script>
 </body>
 </html>
